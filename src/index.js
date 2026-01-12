@@ -6,7 +6,7 @@ import { handleGenAIContent, handleGenAIPodcastScript, handleGenAIDailyAnalysis 
 import { handleGenAIDailyPage } from './handlers/genAIDailyPage.js'; // Import handleGenAIDailyPage
 import { handleCommitToGitHub } from './handlers/commitToGitHub.js';
 import { handleRss } from './handlers/getRss.js';
-import { handleWriteRssData } from './handlers/writeRssData.js'; 
+import { handleWriteRssData, handleGenerateRssContent } from './handlers/writeRssData.js';
 import { dataSources } from './dataFetchers.js';
 import { handleLogin, isAuthenticated, handleLogout } from './auth.js';
 
@@ -32,7 +32,7 @@ export default {
                 <p>Please contact the administrator.</p></body></html>`;
             return new Response(errorPage, { status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
         }
-        
+
         const url = new URL(request.url);
         const path = url.pathname;
         console.log(`Request received: ${request.method} ${path}`);
@@ -48,6 +48,8 @@ export default {
             return await handleRss(request, env);
         } else if (path === '/writeRssData' && request.method === 'GET') {
             return await handleWriteRssData(request, env);
+        } else if (path === '/generateRssContent' && request.method === 'GET') {
+            return await handleGenerateRssContent(request, env);
         }
 
         // Authentication check for all other paths
